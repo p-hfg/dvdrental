@@ -1,0 +1,6 @@
+SELECT sta.store_id, DATE_TRUNC('month',rtl.rental_date) , COUNT(rtl.rental_id) 
+FROM staff sta
+JOIN rental rtl
+ON sta.staff_id = rtl.staff_id
+GROUP BY 2,1
+ORDER BY 2,1

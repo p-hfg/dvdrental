@@ -1,0 +1,9 @@
+SELECT film_len_group, COUNT(film_len_group)
+FROM (SELECT f.title film_title, f.length length_of_movie,
+    CASE WHEN f.length >180 THEN 'More than 3 hours' 
+    WHEN f.length >120 THEN 'Between 2-3 hours'
+    WHEN f.length >60 THEN 'Between 1-2 hours'
+    ELSE '1 hour or less' END film_len_group
+    FROM film f) t1
+GROUP BY 1
+ORDER BY 1

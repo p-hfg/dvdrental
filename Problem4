@@ -1,0 +1,26 @@
+WITH 
+top AS(
+    SELECT top_customer
+    FROM(
+        SELECT ctm.customer_id top_customer, SUM(pay.amount)
+        FROM payment pay
+        JOIN customer ctm 
+        ON ctm.customer_id = pay.customer_id
+        GROUP BY 1
+        ORDER BY 2 DESC
+        LIMIT 10) t1), 
+    
+pay_log AS(
+    SELECT ctm.first_name, ctm.last_name, pay.payment_date, pay.amount
+    FROM payment pay
+    JOIN customer ctm 
+    ON ctm.customer_id = pay.customer_id
+    WHERE ctm.customer_id IN (SELECT top_customer FROM top))
+
+SELECT DATE_TRUNC('month', payment_date) pay_mon, 
+    CONCAT(first_name,' ',last_name) fullname,
+    COUNT(amount) pay_countpermon,
+    SUM(amount) pay_amount
+FROM pay_log
+GROUP BY 2,1
+ORDER BY 2,1
